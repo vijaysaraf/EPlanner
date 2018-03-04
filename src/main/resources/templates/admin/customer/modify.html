@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Excel Enclosures</title>
+
+<div th:replace="fragments/header :: header-css" />
+
+</head>
+<body>
+
+	<div th:replace="fragments/header :: header" />
+
+	<div th:if="${param.id}">
+		<div class="alert alert-info">Edit Customer</div>
+	</div>
+	Add Customer
+
+
+	<div th:replace="fragments/footer :: footer" />
+
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Excel Enclosures</title>
+
+<div th:replace="fragments/header :: header-css" />
+
+</head>
+<body>
+
+	<div th:replace="fragments/header :: header" />
+
+
+	<div class="container">
+
+		<h1>Customers</h1>
+		<table>
+			<tr>
+				<th>ID</th>
+				<th>NAME</th>
+				<th>ADDRESS</th>
+				<th>CONTACT</th>
+			</tr>
+			<tr th:each="cust  : ${customers}">
+				<td th:text="${cust.id}">001</td>
+				<td th:text="${cust.name}">Name</td>
+				<td th:text="${cust.address}">City</td>
+				<td th:text="${cust.contact}">Country</td>
+			</tr>
+		</table>
+
+	</div>
+
+	<div th:replace="fragments/footer :: footer" />
+
+</body>
+</html>
