@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Excel Enclosures : Users</title>
+
+<div th:replace="fragments/header :: header-css" />
+
+<link rel="stylesheet" type="text/css"
+	href="../../dhtmlx/grid/codebase/fonts/font_roboto/roboto.css" />
+<link rel="stylesheet" type="text/css"
+	href="../../dhtmlx/grid/codebase/dhtmlxgrid.css" />
+<script src="../../dhtmlx/grid/codebase/dhtmlxgrid.js"></script>
+
+<script>
+	var myGrid;
+	function loadData() {
+		myGrid = new dhtmlXGridObject('gridbox');
+		myGrid.setImagePath("../../dhtmlx/grid/codebase/imgs/");
+		myGrid.setHeader("User ID,Password,Status");
+		myGrid.attachHeader("#text_search,&nbsp;,#select_filter");
+		myGrid.setInitWidths("250,250,250");
+		myGrid.enableAutoWidth(true);
+		myGrid.setColAlign("left,left,left");
+		myGrid.setColTypes("ed,ed,co");
+		myGrid.enableValidation(true,true,true);
+		myGrid.setColValidators("NotEmpty,NotEmpty,NotEmpty");
+		var combobox = myGrid.getCombo(2);
+		combobox.put("Y", "Active");
+		combobox.put("N", "De-active");
+		myGrid.setColSorting("str,str,str");
+		myGrid.init();
+		myGrid.enableSmartRendering(true);
+		myGrid.load("../../dhtmlx/grid/sample.xml");
+	}
+</script>
+</head>
+<body>
+
+	<div th:replace="fragments/header :: header" />
+
+
+	<div class="container" style='align: center'>
+		<h3>Users</h3> <button onClick="myGrid.addRow((new Date()).valueOf(),['Krishna','******','Y'])">Add Row</button>
+		<button onClick="myGrid.deleteSelectedItem()">Delete Row</button>
+		<div id="gridbox"
+			style="width: 1000px; height: 450px; background-color: white;"></div>
+	</div>
+	<script>
+		loadData();
+	</script>
+	<div th:replace="fragments/footer :: footer" />
+
+</body>
+</html>
