@@ -4,19 +4,42 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class CustomMessage {
-	
-	//GENERIC
+
+	// GENERIC
 	public static final String NO_CUSTOMER = "No details found for [0]";
 	public static final String GENERIC_ERROR = "Internal server error occurred! Please contact administrator";
-	
-	//USERS
+
+	// USERS
 	public static final String USER_ALREADY_EXIST = "User [0] already exist";
-	public static final String USER_ADDED_SUCCESS = "User [0] created successfully";
+
 	public static final String USERID_IS_NOT_VALID = "Please enter valid UserId";
 	public static final String PASSWORD_IS_NOT_VALID = "Please enter valid Password";
+	public static final String USER_ADDED_SUCCESS = "User [0] created successfully";
 	public static final String USER_EDITED_SUCCESS = "User [0] updated successfully";
 	public static final String USER_DELETED_SUCCESS = "User [0] deleted successfully";
-	
+
+	// CUSTOMER
+	public static final String CUSTOMER_ALREADY_EXIST = "Customer [0] already exist";
+	public static final String CUSTOMER_NAME_IS_NOT_VALID = "Please enter valid Name";
+	public static final String CUSTOMER_ADDED_SUCCESS = "Customer [0] created successfully";
+	public static final String CUSTOMER_EDITED_SUCCESS = "Customer [0] updated successfully";
+	public static final String CUSTOMER_DELETED_SUCCESS = "Customer [0] deleted successfully";
+
+	// PHASE
+	public static final String PHASE_ALREADY_EXIST = "Phase [0] already exist";
+	public static final String PHASE_NAME_IS_NOT_VALID = "Please enter valid Name";
+	public static final String PHASE_MAN_POWER_NOT_VALID = "Please enter valid Man Power";
+	public static final String PHASE_ADDED_SUCCESS = "Phase [0] created successfully";
+	public static final String PHASE_EDITED_SUCCESS = "Phase [0] updated successfully";
+	public static final String PHASE_DELETED_SUCCESS = "Phase [0] deleted successfully";
+
+	// REFERENCE
+	public static final String REFERENCE_ALREADY_EXIST = "Reference [0] already exist";
+	public static final String REFERENCE_NAME_IS_NOT_VALID = "Please enter valid Name";
+	public static final String REFERENCE_VALUE_NOT_VALID = "Please enter valid Value";
+	public static final String REFERENCE_ADDED_SUCCESS = "Reference [0] created successfully";
+	public static final String REFERENCE_EDITED_SUCCESS = "Reference [0] updated successfully";
+	public static final String REFERENCE_DELETED_SUCCESS = "Reference [0] deleted successfully";
 
 	public static String getMessage(String message, final String[] param) {
 		if (param != null) {
