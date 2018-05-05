@@ -62,7 +62,7 @@ function populateTable() {
 		idField : 'id',
 		clickToSelect : true,
 		singleSelect : true,
-		toolbarAlign : 'right',
+		buttonsAlign : 'right',
 		sortable:true
 	});
 }
