@@ -2,6 +2,8 @@ package com.twosri.dev.controller;
 
 import java.util.List;
 
+import javax.websocket.server.PathParam;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,6 +32,8 @@ public class ReferenceController {
 	@Autowired
 	ResponseBuilder responseBuilder;
 
+	private static String DOMAIN = "PRODUCT_TYPE";
+
 	@GetMapping(value = "/admin/references/load", produces = "application/json")
 	public List<Reference> load() {
 		List<Reference> referenceList = referenceService.findAll();
@@ -40,7 +44,7 @@ public class ReferenceController {
 	@PostMapping(value = "/admin/references/save", produces = "application/json")
 	public RestResponse save(Reference reference) {
 		try {
-			log.info("Reference to add/edit {}",reference);
+			log.info("Reference to add/edit {}", reference);
 			Reference savedReference = referenceService.save(reference);
 			String msg = "";
 			if (reference.getId() != null)

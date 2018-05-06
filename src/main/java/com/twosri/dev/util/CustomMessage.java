@@ -26,9 +26,10 @@ public class CustomMessage {
 	public static final String CUSTOMER_DELETED_SUCCESS = "Customer [0] deleted successfully";
 
 	// PHASE
-	public static final String PHASE_ALREADY_EXIST = "Phase [0] already exist";
+	public static final String PHASE_SEQUENCE_ALREADY_EXIST = "Phase [0] and/or Sequence [1] already added";
 	public static final String PHASE_NAME_IS_NOT_VALID = "Please enter valid Name";
 	public static final String PHASE_MAN_POWER_NOT_VALID = "Please enter valid Man Power";
+	public static final String PHASE_SEQUENCE_NOT_VALID = "Please enter valid Sequence";
 	public static final String PHASE_ADDED_SUCCESS = "Phase [0] created successfully";
 	public static final String PHASE_EDITED_SUCCESS = "Phase [0] updated successfully";
 	public static final String PHASE_DELETED_SUCCESS = "Phase [0] deleted successfully";
@@ -40,6 +41,15 @@ public class CustomMessage {
 	public static final String REFERENCE_ADDED_SUCCESS = "Reference [0] created successfully";
 	public static final String REFERENCE_EDITED_SUCCESS = "Reference [0] updated successfully";
 	public static final String REFERENCE_DELETED_SUCCESS = "Reference [0] deleted successfully";
+
+	// CALCULATION
+	public static final String CALCULATION_ENTRY_ALREADY_EXIST = "Entry for product type [0] for phase [1] already exist";
+	public static final String CALCULATION_PRODUCT_IS_NOT_VALID = "Please enter valid product type";
+	public static final String CALCULATION_PHASE_IS_NOT_VALID = "Please enter valid phase";
+	public static final String CALCULATION_MAN_HRS_IS_NOT_VALID = "Please enter valid Man Hours";
+	public static final String CALCULATION_ENTRY_ADDED_SUCCESS = "Entry for Phase [0] and ProductType [1] created successfully";
+	public static final String CALCULATION_ENTRY_EDITED_SUCCESS = "Entry for Phase [0] and ProductType [1] updated successfully";
+	public static final String CALCULATION_ENTRY_DELETED_SUCCESS = "Entry for [0] and ProductType [1] deleted successfully";
 
 	public static String getMessage(String message, final String[] param) {
 		if (param != null) {

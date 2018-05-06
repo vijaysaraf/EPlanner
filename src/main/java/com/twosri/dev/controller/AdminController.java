@@ -25,5 +25,9 @@ public class AdminController {
 	public String references() {
 		return AppEnum._PATH_REFERENCE.getValue();
 	}
+	@GetMapping("/admin/calculations")
+	public String calculations() {
+		return AppEnum._PATH_CALCULATION.getValue();
+	}
 
 }

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>Excel Enclosures : Phases</title>
+<title>Excel Enclosures : Calculations</title>
 
 <div th:replace="fragments/header :: header-css" />
 
@@ -15,6 +15,7 @@
 <link rel="stylesheet" type="text/css"
 	href="../../boot-table/bootstrap-table.min.css" />
 <script src="../../boot-table/bootstrap-table.min.js"></script>
+
 <style>
 div#newWindow {
 	position: relative;
@@ -26,7 +27,7 @@ div#newWindow {
 	overflow: auto;
 }
 </style>
-<script src="../../js/phase.js"></script>
+<script src="../../js/calculation.js"></script>
 </head>
 <body>
 
@@ -34,15 +35,15 @@ div#newWindow {
 
 
 	<div class="container" id='container'>
-		<h3>Phases</h3>
+		<h3>Calculation</h3>
 
-		<div id="toolbar" style='align: right'>
+		<div id="toolbar">
 			<button id="addBtn" class="btn btn-default"
-				onclick="showWindow('add')">Add Phase</button>
+				onclick="showWindow('add')">Add Entry</button>
 			<button id="editBtn" class="btn btn-default"
-				onclick="showWindow('edit')">Edit Phase</button>
+				onclick="showWindow('edit')">Edit Entry</button>
 			<button id="deleteBtn" class="btn btn-default"
-				onclick="deleteRecord()">Delete Phase</button>
+				onclick="deleteRecord()">Delete Entry</button>
 		</div>
 		<table id="table"></table>
 
@@ -51,27 +52,28 @@ div#newWindow {
 			<fieldset>
 				<div id='error' class="alert alert-danger" style='display: none'></div>
 
+				<div class="form-group"></div>
+
 				<div class="form-group">
-					<label for="name">Phase Name</label> <input type="text" name="name"
-						id="name" class="form-control input-sm" placeholder="name" />
+					<label for="productType">Product Type</label> <select
+						id="productType" name="productType" class="form-control input-sm">
+						<option value="">-- Select Product --</option>
+					</select>
 				</div>
-				
 				<div class="form-group">
-					<label for="defaultManPower">Man Power(Default)</label>
-					 <select
-						id="defaultManPower" name="defaultManPower"
-						class="form-control input-sm">
-						<option value="0">-- Select Man Power --</option>
+					<label for="phaseId">Phase</label> <select id="phaseId"
+						name="phaseId" class="form-control input-sm">
+						<option value="0">-- Select Phase --</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="calculatedManHours">Man Hours</label>
+					<select id="calculatedManHours"
+						name="calculatedManHours" class="form-control input-sm">
+						<option value="0">-- Select Man Hours --</option>
 					</select>
 				</div>
 
-				<div class="form-group">
-					<label for="sequence">Sequence</label> <select
-						id="sequence" name="sequence"
-						class="form-control input-sm">
-						<option value="0">-- Select Sequence --</option>
-					</select>
-				</div>
 
 				<div>
 					<input type='button' class="btn btn-default" name='saveBtn'

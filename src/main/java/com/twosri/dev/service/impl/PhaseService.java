@@ -58,7 +58,8 @@ public class PhaseService implements IPhaseService {
 			return mMapper.map(entity, Phase.class);
 		} catch (DuplicateKeyException e) {
 			throw exceptionFactory.createException(ErrorCode.VALIDATION,
-					CustomMessage.getMessage(CustomMessage.PHASE_ALREADY_EXIST, new String[] { toBeSaved.getName() }),
+					CustomMessage.getMessage(CustomMessage.PHASE_SEQUENCE_ALREADY_EXIST,
+							new String[] { toBeSaved.getName(), String.valueOf(toBeSaved.getSequence()) }),
 					e);
 		} catch (Exception e) {
 			throw exceptionFactory.createException(ErrorCode.GENERIC,
@@ -70,7 +71,11 @@ public class PhaseService implements IPhaseService {
 		String msg = "";
 		if (toBeSaved.getName() == null || toBeSaved.getName().trim().length() <= 0) {
 			msg = CustomMessage.getMessage(CustomMessage.PHASE_NAME_IS_NOT_VALID, new String[] { toBeSaved.getName() });
-		} else if (toBeSaved.getDefaultManPower() == 0) {
+		} else if (toBeSaved.getSequence() == 0) {
+			msg = CustomMessage.getMessage(CustomMessage.PHASE_SEQUENCE_NOT_VALID,
+					new String[] { String.valueOf(toBeSaved.getSequence()) });
+		}
+		if (toBeSaved.getDefaultManPower() == 0) {
 			msg = CustomMessage.getMessage(CustomMessage.PHASE_MAN_POWER_NOT_VALID,
 					new String[] { String.valueOf(toBeSaved.getDefaultManPower()) });
 		}

@@ -1,19 +1,21 @@
-var dhxWins, w1, C;
+var dhxWins, w1, products, phases;
 function initWindow() {
 	dhxWins = new dhtmlXWindows();
-	//dhxWins.attachViewportTo("container");
+	// dhxWins.attachViewportTo("container");
 	w1 = dhxWins.createWindow("w1", 20, 30, 350, 450);
 	w1.attachObject("newWindow");
-	w1.setText("Add Phase");
+	w1.setText("Add Calculation");
 	// w1.setSkin("dhx_terrace");
 	w1.button("close").disable();
 	w1.button("minmax").disable();
 	w1.denyResize();
 
 }
+
 function populateTable() {
+	loadSelectBoxes();
 	$('#table').bootstrapTable({
-		url : '/admin/phases/load',
+		url : '/admin/calculations/load',
 		columns : [ {
 			field : 'state',
 			title : 'Select',
@@ -24,25 +26,42 @@ function populateTable() {
 			align : 'center',
 			valign : 'middle',
 			visible : false,
-			searchable:false
-
-		},{
-			field : 'sequence',
-			title : 'Sequence',
-			align : 'center',
-			valign : 'middle',
-			sortable : true
+			searchable : false
 
 		}, {
-			field : 'name',
-			title : 'Name',
+			field : 'productType',
+			title : 'Product Type',
 			align : 'center',
 			valign : 'middle',
-			sortable : true
+			sortable : true,
+			formatter : function(value, row, index) {
+				for (var i = 0; i < products.length; i++) {
+					if (products[i].value == value)
+						return products[i].name;
+					else
+						continue;
+				}
+				return value;
+			}
 
 		}, {
-			field : 'defaultManPower',
-			title : 'Man Power (Default)',
+			field : 'phaseId',
+			title : 'Phase',
+			align : 'center',
+			valign : 'middle',
+			sortable : true,
+			formatter : function(value, row, index) {
+				for (var i = 0; i < phases.length; i++) {
+					if (phases[i].id == value)
+						return phases[i].name;
+					else
+						continue;
+				}
+				return value;
+			}
+		}, {
+			field : 'calculatedManHours',
+			title : 'Man Hours',
 			align : 'center',
 			valign : 'middle'
 		} ],
@@ -55,14 +74,27 @@ function populateTable() {
 		clickToSelect : true,
 		singleSelect : true,
 		buttonsAlign : 'right',
-		sortable:true
+		sortable : true
 	});
-	for (var i = 1; i < 21; i++) {
-		$('#sequence').append(
-				'<option value="' + i + '">' + i + '</option>');
-	}
+
+}
+function loadSelectBoxes() {
+	dhtmlx.ajax("/admin/references/load", function(returnData) {
+		products = $.parseJSON(returnData);
+		$.each(products, function(i, d) {
+			$('#productType').append(
+					'<option value="' + d.value + '">' + d.name + '</option>');
+		});
+	});
+	dhtmlx.ajax("/admin/phases/load", function(returnData) {
+		phases = $.parseJSON(returnData);
+		$.each(phases, function(i, d) {
+			$('#phaseId').append(
+					'<option value="' + d.id + '">' + d.name + '</option>');
+		});
+	});
 	for (var i = 1; i < 51; i++) {
-		$('#defaultManPower').append(
+		$('#calculatedManHours').append(
 				'<option value="' + i + '">' + i + '</option>');
 	}
 }
@@ -81,7 +113,7 @@ function showWindow(selectedMode) {
 
 	if (dhxWins == null || w1 == null)
 		initWindow();
-	document.getElementById("name").focus();
+	document.getElementById("productType").focus();
 	dhxWins.window('w1').center();
 	dhxWins.window('w1').show();
 	mode = selectedMode;
@@ -99,28 +131,32 @@ function hideWindow() {
 function saveRecord() {
 	if (mode == 'add') {
 		var data = {
-			'name' : $("#name").val(),
-			'defaultManPower' : $("#defaultManPower").val(),
-			'sequence' : $("#sequence").val()
+			'productType' : $("#productType").val(),
+			'phaseId' : $("#phaseId").val(),
+			'calculatedManHours' : $("#calculatedManHours").val(),
+			'productName':$('#productType').find('option:selected').text(),
+			'phaseName':$('#phaseId').find('option:selected').text()
 		}
 	} else {
 		var data = {
 			'id' : getSelected().id,
-			'name' : $("#name").val(),
-			'defaultManPower' : $("#defaultManPower").val(),
-			'sequence' : $("#sequence").val()
+			'productType' : $("#productType").val(),
+			'phaseId' : $("#phaseId").val(),
+			'calculatedManHours' : $("#calculatedManHours").val(),
+			'productName':$('#productType').find('option:selected').text(),
+			'phaseName':$('#phaseId').find('option:selected').text()
 		}
 	}
 	saveOrUpdate(data);
 }
 function saveOrUpdate(data) {
 	preSubmit();
-	dhtmlx.ajax().post("/admin/phases/save", data, function(returnData) {
+	dhtmlx.ajax().post("/admin/calculations/save", data, function(returnData) {
 		var res = $.parseJSON(returnData);
 		if (res.messageType == 'SUCCESS') {
 			hideWindow();
 			displayMessage(res.message);
-			var savedPhase = res.object;
+			var savedCalculation = res.object;
 			$('#table').bootstrapTable('refresh');
 		} else {
 			displayError(res.message);
@@ -129,10 +165,12 @@ function saveOrUpdate(data) {
 	postSubmit();
 }
 function cleanForm() {
-	document.getElementById("name").value = "";
-	document.getElementById("defaultManPower").value = "0";
-	document.getElementById("sequence").value = "0";
-
+	document.getElementById("productType").value = "";
+	document.getElementById("phaseId").value = "0";
+	document.getElementById("calculatedManHours").value = "0";
+	/*
+	 * $("#error").hide(); $("#error").html("");
+	 */
 }
 function preSubmit() {
 	$('#saveBtn').prop('disabled', true);
@@ -165,9 +203,9 @@ function getSelected() {
 }
 function setValues() {
 	var selected = getSelected();
-	document.getElementById("name").value = selected.name;
-	document.getElementById("sequence").value = selected.sequence;
-	document.getElementById("defaultManPower").value = selected.defaultManPower;
+	document.getElementById("productType").value = selected.productType;
+	document.getElementById("phaseId").value = selected.phaseId;
+	document.getElementById("calculatedManHours").value = selected.calculatedManHours;
 }
 function deleteRecord() {
 	var selected = getSelected();
@@ -177,18 +215,19 @@ function deleteRecord() {
 	} else {
 		var data = {
 			'id' : selected.id,
-			'name' : selected.name,
-			'sequence':selected.sequence
+			'productType' : selected.productType,
+			'phaseId' : selected.phaseId
 		}
-		dhtmlx.ajax().post("/admin/phases/delete/", data, function(returnData) {
-			var res = $.parseJSON(returnData);
-			if (res.messageType == 'SUCCESS') {
-				displayMessage(res.message);
-				$('#table').bootstrapTable('refresh');
-			} else {
-				displayError(res.message);
-			}
-		});
+		dhtmlx.ajax().post("/admin/calculations/delete/", data,
+				function(returnData) {
+					var res = $.parseJSON(returnData);
+					if (res.messageType == 'SUCCESS') {
+						displayMessage(res.message);
+						$('#table').bootstrapTable('refresh');
+					} else {
+						displayError(res.message);
+					}
+				});
 	}
 
 }

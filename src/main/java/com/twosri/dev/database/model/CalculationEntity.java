@@ -7,18 +7,17 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.Data;
 
 @Data
-@Document(collection = "PHASE")
-public class PhaseEntity {
+@Document(collection = "Calculation")
+public class CalculationEntity {
 
 	@Id
 	private String id;
 
-	@Indexed(unique = true)
-	private String name;
+	@Indexed
+	private String productType;
+	@Indexed
+	private String phaseId;
 	
-	@Indexed(unique = true)
-	private int sequence;
-
-	private int defaultManPower;
-
+	private int givenManPower;
+	private int calculatedManHours;
 }
