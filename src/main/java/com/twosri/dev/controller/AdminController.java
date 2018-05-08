@@ -17,17 +17,25 @@ public class AdminController {
 	public String customers() {
 		return AppEnum._PATH_CUSTOMER.getValue();
 	}
+
 	@GetMapping("/admin/phases")
 	public String phases() {
 		return AppEnum._PATH_PHASE.getValue();
 	}
+
 	@GetMapping("/admin/references")
 	public String references() {
 		return AppEnum._PATH_REFERENCE.getValue();
 	}
+
 	@GetMapping("/admin/calculations")
 	public String calculations() {
 		return AppEnum._PATH_CALCULATION.getValue();
+	}
+
+	@GetMapping("/admin/orders")
+	public String orders() {
+		return AppEnum._PATH_ORDER.getValue();
 	}
 
 }

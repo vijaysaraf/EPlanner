@@ -12,9 +12,11 @@ import com.twosri.dev.bean.Reference;
 import com.twosri.dev.database.model.ReferenceEntity;
 import com.twosri.dev.database.repository.ReferenceRepository;
 import com.twosri.dev.service.IReferenceService;
+import com.twosri.dev.service.cache.CacheManager;
 import com.twosri.dev.util.CustomMessage;
 import com.twosri.dev.util.ErrorCode;
 import com.twosri.dev.util.ExceptionFactory;
+import com.twosri.dev.util.Mode;
 
 @Service
 public class ReferenceService implements IReferenceService {
@@ -27,11 +29,15 @@ public class ReferenceService implements IReferenceService {
 
 	@Autowired
 	ExceptionFactory exceptionFactory;
+	
+	@Autowired
+	CacheManager cacheManager;
 
 	@Override
 	public void delete(Reference deleted) {
 		try {
 			repository.delete(deleted.getId());
+			cacheManager.updateProducts(Mode.DELETE, deleted.getId(), null);
 		} catch (Exception e) {
 			throw exceptionFactory.createException(ErrorCode.GENERIC,
 					CustomMessage.getMessage(CustomMessage.GENERIC_ERROR, null), e);
@@ -55,6 +61,7 @@ public class ReferenceService implements IReferenceService {
 		validateReference(toBeSaved);
 		try {
 			ReferenceEntity entity = repository.save(mMapper.map(toBeSaved, ReferenceEntity.class));
+			cacheManager.updateProducts(Mode.ADD, entity.getId(), toBeSaved);
 			return mMapper.map(entity, Reference.class);
 		} catch (DuplicateKeyException e) {
 			throw exceptionFactory.createException(ErrorCode.VALIDATION, CustomMessage

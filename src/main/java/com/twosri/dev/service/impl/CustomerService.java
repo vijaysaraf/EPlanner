@@ -12,9 +12,11 @@ import com.twosri.dev.bean.Customer;
 import com.twosri.dev.database.model.CustomerEntity;
 import com.twosri.dev.database.repository.CustomerRepository;
 import com.twosri.dev.service.ICustomerService;
+import com.twosri.dev.service.cache.CacheManager;
 import com.twosri.dev.util.CustomMessage;
 import com.twosri.dev.util.ErrorCode;
 import com.twosri.dev.util.ExceptionFactory;
+import com.twosri.dev.util.Mode;
 
 @Service
 public class CustomerService implements ICustomerService {
@@ -27,11 +29,15 @@ public class CustomerService implements ICustomerService {
 
 	@Autowired
 	ExceptionFactory exceptionFactory;
+	
+	@Autowired
+	CacheManager cacheManager;
 
 	@Override
 	public void delete(Customer deleted) {
 		try {
 			repository.delete(deleted.getId());
+			cacheManager.updateCustomers(Mode.DELETE, deleted.getId(), null);
 		} catch (Exception e) {
 			throw exceptionFactory.createException(ErrorCode.GENERIC,
 					CustomMessage.getMessage(CustomMessage.GENERIC_ERROR, null), e);
@@ -55,6 +61,7 @@ public class CustomerService implements ICustomerService {
 		validateCustomer(toBeSaved);
 		try {
 			CustomerEntity entity = repository.save(mMapper.map(toBeSaved, CustomerEntity.class));
+			cacheManager.updateCustomers(Mode.ADD, entity.getId(), toBeSaved);
 			return mMapper.map(entity, Customer.class);
 		} catch (DuplicateKeyException e) {
 			throw exceptionFactory.createException(ErrorCode.VALIDATION, CustomMessage

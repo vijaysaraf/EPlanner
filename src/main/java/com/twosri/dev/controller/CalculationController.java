@@ -41,7 +41,7 @@ public class CalculationController {
 	@PostMapping(value = "/admin/calculations/save", produces = "application/json")
 	public RestResponse save(Calculation calculation) {
 		try {
-			log.info("{}",calculation);
+			log.info("{}", calculation);
 			Calculation savedCalculation = calculationService.save(calculation);
 			String msg = "";
 			if (calculation.getId() != null)
@@ -60,10 +60,9 @@ public class CalculationController {
 	@PostMapping(value = "/admin/calculations/delete", produces = "application/json")
 	public RestResponse delete(Calculation calculation) {
 		try {
-			log.info("{}",calculation);
+			log.info("{}", calculation);
 			calculationService.delete(calculation);
-			String msg = CustomMessage.getMessage(CustomMessage.CALCULATION_ENTRY_DELETED_SUCCESS, new String[] {
-					calculation.getPhaseName().toUpperCase(), calculation.getProductName().toUpperCase() });
+			String msg = CustomMessage.getMessage(CustomMessage.CALCULATION_ENTRY_DELETED_SUCCESS, null);
 			return responseBuilder.createSuccessResponse(null, msg);
 		} catch (CustomException e) {
 			log.error(e.toString());

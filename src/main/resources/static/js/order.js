@@ -1,21 +1,20 @@
-var dhxWins, w1, products, phases;
+var dhxWins, w1, customers,products;
 function initWindow() {
 	dhxWins = new dhtmlXWindows();
-	// dhxWins.attachViewportTo("container");
+	//dhxWins.attachViewportTo("container");
 	w1 = dhxWins.createWindow("w1", 20, 30, 350, 450);
 	w1.attachObject("newWindow");
-	w1.setText("Add Calculation");
+	w1.setText("Add User");
 	// w1.setSkin("dhx_terrace");
 	w1.button("close").disable();
 	w1.button("minmax").disable();
 	w1.denyResize();
 
 }
-
 function populateTable() {
 	loadSelectBoxes();
 	$('#table').bootstrapTable({
-		url : '/admin/calculations/load',
+		url : '/admin/orders/load',
 		columns : [ {
 			field : 'state',
 			title : 'Select',
@@ -29,22 +28,63 @@ function populateTable() {
 			searchable : false
 
 		}, {
-			field : 'productName',
-			title : 'Product Type',
+			field : 'customerName',
+			title : 'Customer',
 			align : 'center',
 			valign : 'middle',
 			sortable : true
+
 		}, {
-			field : 'phaseName',
-			title : 'Phase',
+			field : 'orderNumber',
+			title : 'Purchase Order Number',
 			align : 'center',
 			valign : 'middle',
 			sortable : true
+
 		}, {
-			field : 'calculatedManHours',
-			title : 'Man Hours',
+			field : 'jobNumber',
+			title : 'Job Number',
+			align : 'center',
+			valign : 'middle',
+			sortable : true
+
+		}, {
+			field : 'width',
+			title : 'Width',
 			align : 'center',
 			valign : 'middle'
+
+		}, {
+			field : 'depth',
+			title : 'Depth',
+			align : 'center',
+			valign : 'middle'
+
+		}, {
+			field : 'height',
+			title : 'Height',
+			align : 'center',
+			valign : 'middle'
+
+		}, {
+			field : 'quantity',
+			title : 'Quantity',
+			align : 'center',
+			valign : 'middle'
+		}, {
+			field : 'productName',
+			title : 'Product',
+			align : 'center',
+			valign : 'middle',
+			sortable : true
+
+		},{
+			field : 'displayStartDate',
+			title : 'Start Date',
+			align : 'center',
+			valign : 'middle',
+			sortable : true
+
 		} ],
 		striped : true,
 		cache : false,
@@ -57,7 +97,6 @@ function populateTable() {
 		buttonsAlign : 'right',
 		sortable : true
 	});
-
 }
 function loadSelectBoxes() {
 	dhtmlx.ajax("/admin/references/load", function(returnData) {
@@ -67,15 +106,15 @@ function loadSelectBoxes() {
 					'<option value="' + d.id + '">' + d.name + '</option>');
 		});
 	});
-	dhtmlx.ajax("/admin/phases/load", function(returnData) {
-		phases = $.parseJSON(returnData);
-		$.each(phases, function(i, d) {
-			$('#phaseId').append(
+	dhtmlx.ajax("/admin/customers/load", function(returnData) {
+		customers = $.parseJSON(returnData);
+		$.each(customers, function(i, d) {
+			$('#customerId').append(
 					'<option value="' + d.id + '">' + d.name + '</option>');
 		});
 	});
 	for (var i = 1; i < 51; i++) {
-		$('#calculatedManHours').append(
+		$('#quantity').append(
 				'<option value="' + i + '">' + i + '</option>');
 	}
 }
@@ -94,7 +133,7 @@ function showWindow(selectedMode) {
 
 	if (dhxWins == null || w1 == null)
 		initWindow();
-	document.getElementById("productType").focus();
+	document.getElementById("customerId").focus();
 	dhxWins.window('w1').center();
 	dhxWins.window('w1').show();
 	mode = selectedMode;
@@ -112,32 +151,40 @@ function hideWindow() {
 function saveRecord() {
 	if (mode == 'add') {
 		var data = {
+			'customerId' : $("#customerId").val(),
+			'orderNumber' : $("#orderNumber").val(),
+			'jobNumber' : $("#jobNumber").val(),
+			'width' : $("#width").val(),
+			'depth' : $("#depth").val(),
+			'height' : $("#height").val(),
+			'quantity' : $("#quantity").val(),
 			'productType' : $("#productType").val(),
-			'phaseId' : $("#phaseId").val(),
-			'calculatedManHours' : $("#calculatedManHours").val(),
-			'productName' : $('#productType').find('option:selected').text(),
-			'phaseName' : $('#phaseId').find('option:selected').text()
+			'displayStartDate' : $("#displayStartDate").val()
 		}
 	} else {
 		var data = {
 			'id' : getSelected().id,
+			'customerId' : $("#customerId").val(),
+			'orderNumber' : $("#orderNumber").val(),
+			'jobNumber' : $("#jobNumber").val(),
+			'width' : $("#width").val(),
+			'depth' : $("#depth").val(),
+			'height' : $("#height").val(),
+			'quantity' : $("#quantity").val(),
 			'productType' : $("#productType").val(),
-			'phaseId' : $("#phaseId").val(),
-			'calculatedManHours' : $("#calculatedManHours").val(),
-			'productName' : $('#productType').find('option:selected').text(),
-			'phaseName' : $('#phaseId').find('option:selected').text()
+			'displayStartDate' : $("#displayStartDate").val()
 		}
 	}
 	saveOrUpdate(data);
 }
 function saveOrUpdate(data) {
 	preSubmit();
-	dhtmlx.ajax().post("/admin/calculations/save", data, function(returnData) {
+	dhtmlx.ajax().post("/admin/orders/save", data, function(returnData) {
 		var res = $.parseJSON(returnData);
 		if (res.messageType == 'SUCCESS') {
 			hideWindow();
 			displayMessage(res.message);
-			var savedCalculation = res.object;
+			var savedOrder = res.object;
 			$('#table').bootstrapTable('refresh');
 		} else {
 			displayError(res.message);
@@ -146,12 +193,15 @@ function saveOrUpdate(data) {
 	postSubmit();
 }
 function cleanForm() {
+	document.getElementById("customerId").value = "";
+	document.getElementById("orderNumber").value = "";
+	document.getElementById("jobNumber").value = "";
+	document.getElementById("width").value = "";
+	document.getElementById("depth").value = "";
+	document.getElementById("height").value = "";
+	document.getElementById("quantity").value = "";
 	document.getElementById("productType").value = "";
-	document.getElementById("phaseId").value = "0";
-	document.getElementById("calculatedManHours").value = "0";
-	/*
-	 * $("#error").hide(); $("#error").html("");
-	 */
+	document.getElementById("displayStartDate").value = "";
 }
 function preSubmit() {
 	$('#saveBtn').prop('disabled', true);
@@ -162,15 +212,9 @@ function postSubmit() {
 	$('#cancelBtn').prop('disabled', false);
 }
 function displayMessage(res) {
-	/*
-	 * $("#info").html(res); $("#info").show(); $("#info").toggle(5000);
-	 */
 	alert(res);
 }
 function displayError(res) {
-	/*
-	 * $("#error").show(); $("#error").html(res);
-	 */
 	alert(res);
 }
 function getSelected() {
@@ -184,9 +228,15 @@ function getSelected() {
 }
 function setValues() {
 	var selected = getSelected();
+	document.getElementById("customerId").value = selected.customerId;
+	document.getElementById("orderNumber").value = selected.orderNumber;
+	document.getElementById("jobNumber").value = selected.jobNumber;
+	document.getElementById("width").value = selected.width;
+	document.getElementById("depth").value = selected.depth;
+	document.getElementById("height").value = selected.height;
+	document.getElementById("quantity").value = selected.quantity;
 	document.getElementById("productType").value = selected.productType;
-	document.getElementById("phaseId").value = selected.phaseId;
-	document.getElementById("calculatedManHours").value = selected.calculatedManHours;
+	document.getElementById("displayStartDate").value = selected.displayStartDate;
 }
 function deleteRecord() {
 	var selected = getSelected();
@@ -196,19 +246,27 @@ function deleteRecord() {
 	} else {
 		var data = {
 			'id' : selected.id,
+			'orderNumber' : selected.orderNumber,
+			'customerId' : selected.customerId,
+			'orderNumber' : selected.orderNumber,
+			'jobNumber' : selected.jobNumber,
+			'width' : selected.width,
+			'depth' : selected.depth,
+			'height' : selected.height,
+			'quantity' : selected.quantity,
 			'productType' : selected.productType,
-			'phaseId' : selected.phaseId
+			'displayStartDate' : selected.displayStartDate
+
 		}
-		dhtmlx.ajax().post("/admin/calculations/delete/", data,
-				function(returnData) {
-					var res = $.parseJSON(returnData);
-					if (res.messageType == 'SUCCESS') {
-						displayMessage(res.message);
-						$('#table').bootstrapTable('refresh');
-					} else {
-						displayError(res.message);
-					}
-				});
+		dhtmlx.ajax().post("/admin/orders/delete/", data, function(returnData) {
+			var res = $.parseJSON(returnData);
+			if (res.messageType == 'SUCCESS') {
+				displayMessage(res.message);
+				$('#table').bootstrapTable('refresh');
+			} else {
+				displayError(res.message);
+			}
+		});
 	}
 
 }

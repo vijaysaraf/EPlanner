@@ -49,7 +49,21 @@ public class CustomMessage {
 	public static final String CALCULATION_MAN_HRS_IS_NOT_VALID = "Please enter valid Man Hours";
 	public static final String CALCULATION_ENTRY_ADDED_SUCCESS = "Entry for Phase [0] and ProductType [1] created successfully";
 	public static final String CALCULATION_ENTRY_EDITED_SUCCESS = "Entry for Phase [0] and ProductType [1] updated successfully";
-	public static final String CALCULATION_ENTRY_DELETED_SUCCESS = "Entry for [0] and ProductType [1] deleted successfully";
+	public static final String CALCULATION_ENTRY_DELETED_SUCCESS = "Entry deleted successfully";
+
+	//ORDER
+	public static final String ORDER_CUSTOMER_IS_NOT_VALID = "Please enter valid customer name";
+	public static final String ORDER_NUMBER_IS_NOT_VALID = "Please enter valid purchase order number";
+	public static final String ORDER_JOB_NO_IS_NOT_VALID = "Please enter valid job number";
+	public static final String ORDER_WIDTH_IS_NOT_VALID = "Please enter valid width";
+	public static final String ORDER_DEPTH_IS_NOT_VALID = "Please enter valid depth";
+	public static final String ORDER_HEIGHT_IS_NOT_VALID = "Please enter valid height";
+	public static final String ORDER_QUANTITY_IS_NOT_VALID = "Please enter valid quantity";
+	public static final String ORDER_PRODUCT_IS_NOT_VALID = "Please enter valid product type";
+	public static final String ORDER_PRICE_IS_NOT_VALID = "Please enter valid price";
+	public static final String ORDER_ENTRY_ADDED_SUCCESS = "Order number [0] created successfully";
+	public static final String ORDER_ENTRY_EDITED_SUCCESS = "Order number [0] updated successfully";
+	public static final String ORDER_ENTRY_DELETED_SUCCESS = "Order number [0] deleted successfully";
 
 	public static String getMessage(String message, final String[] param) {
 		if (param != null) {

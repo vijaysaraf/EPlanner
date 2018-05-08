@@ -12,9 +12,11 @@ import com.twosri.dev.bean.Phase;
 import com.twosri.dev.database.model.PhaseEntity;
 import com.twosri.dev.database.repository.PhaseRepository;
 import com.twosri.dev.service.IPhaseService;
+import com.twosri.dev.service.cache.CacheManager;
 import com.twosri.dev.util.CustomMessage;
 import com.twosri.dev.util.ErrorCode;
 import com.twosri.dev.util.ExceptionFactory;
+import com.twosri.dev.util.Mode;
 
 @Service
 public class PhaseService implements IPhaseService {
@@ -28,10 +30,14 @@ public class PhaseService implements IPhaseService {
 	@Autowired
 	ExceptionFactory exceptionFactory;
 
+	@Autowired
+	CacheManager cacheManager;
+
 	@Override
 	public void delete(Phase deleted) {
 		try {
 			repository.delete(deleted.getId());
+			cacheManager.updatePhases(Mode.DELETE, deleted.getId(), null);
 		} catch (Exception e) {
 			throw exceptionFactory.createException(ErrorCode.GENERIC,
 					CustomMessage.getMessage(CustomMessage.GENERIC_ERROR, null), e);
@@ -55,6 +61,7 @@ public class PhaseService implements IPhaseService {
 		validatePhase(toBeSaved);
 		try {
 			PhaseEntity entity = repository.save(mMapper.map(toBeSaved, PhaseEntity.class));
+			cacheManager.updatePhases(Mode.ADD, entity.getId(), toBeSaved);
 			return mMapper.map(entity, Phase.class);
 		} catch (DuplicateKeyException e) {
 			throw exceptionFactory.createException(ErrorCode.VALIDATION,

@@ -5,13 +5,15 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import com.twosri.dev.bean.Calculation;
+import com.twosri.dev.bean.Phase;
+import com.twosri.dev.bean.Reference;
 import com.twosri.dev.database.model.CalculationEntity;
 import com.twosri.dev.database.repository.CalculationRepository;
 import com.twosri.dev.service.ICalculationService;
+import com.twosri.dev.service.cache.CacheManager;
 import com.twosri.dev.util.CustomMessage;
 import com.twosri.dev.util.ErrorCode;
 import com.twosri.dev.util.ExceptionFactory;
@@ -28,6 +30,9 @@ public class CalculationService implements ICalculationService {
 	@Autowired
 	ExceptionFactory exceptionFactory;
 
+	@Autowired
+	CacheManager cacheManager;
+
 	@Override
 	public void delete(Calculation deleted) {
 		try {
@@ -41,7 +46,13 @@ public class CalculationService implements ICalculationService {
 	@Override
 	public List<Calculation> findAll() {
 		List<CalculationEntity> entityList = repository.findAll();
-		return entityList.stream().map(entity -> mMapper.map(entity, Calculation.class)).collect(Collectors.toList());
+		List<Calculation> calculations = entityList.stream().map(entity -> {
+			Calculation calculation = mMapper.map(entity, Calculation.class);
+			calculation.setProductName(cacheManager.getProduct(entity.getProductType()).getName());
+			calculation.setPhaseName(cacheManager.getPhase(entity.getPhaseId()).getName());
+			return calculation;
+		}).collect(Collectors.toList());
+		return calculations;
 	}
 
 	@Override
@@ -83,7 +94,7 @@ public class CalculationService implements ICalculationService {
 					if (toBeSaved.getId() == null || !records.get(0).getId().equals(toBeSaved.getId()))
 						isExisting = true;
 				} else
-					isExisting = true; //Worst case
+					isExisting = true; // Worst case
 			}
 			if (isExisting)
 				msg = CustomMessage.getMessage(CustomMessage.CALCULATION_ENTRY_ALREADY_EXIST,
