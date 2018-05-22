@@ -7,7 +7,8 @@ public enum AppEnum {
 	_PATH_PHASE("/admin/phase"),
 	_PATH_REFERENCE("/admin/reference"),
 	_PATH_CALCULATION("/admin/calculation"),
-	_PATH_ORDER("/admin/order");
+	_PATH_ORDER("/admin/order"),
+	_PATH_EVENT("/admin/event");
 	
 	private String value;
 

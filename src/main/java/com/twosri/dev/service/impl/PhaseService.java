@@ -46,7 +46,7 @@ public class PhaseService implements IPhaseService {
 
 	@Override
 	public List<Phase> findAll() {
-		List<PhaseEntity> entityList = repository.findAll();
+		List<PhaseEntity> entityList = repository.findAllByOrderBySequenceAsc();
 		return entityList.stream().map(entity -> mMapper.map(entity, Phase.class)).collect(Collectors.toList());
 	}
 

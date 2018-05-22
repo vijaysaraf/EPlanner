@@ -11,6 +11,8 @@ public interface PhaseRepository extends MongoRepository<PhaseEntity, String> {
 	void delete(PhaseEntity deleted);
 
 	List<PhaseEntity> findAll();
+	
+	List<PhaseEntity> findAllByOrderBySequenceAsc();
 
 	PhaseEntity findOne(String id);
 

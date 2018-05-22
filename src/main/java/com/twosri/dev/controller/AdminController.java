@@ -37,5 +37,9 @@ public class AdminController {
 	public String orders() {
 		return AppEnum._PATH_ORDER.getValue();
 	}
+	@GetMapping("/admin/events")
+	public String events() {
+		return AppEnum._PATH_EVENT.getValue();
+	}
 
 }

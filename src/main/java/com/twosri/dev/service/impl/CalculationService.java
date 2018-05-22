@@ -1,5 +1,6 @@
 package com.twosri.dev.service.impl;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,6 +47,10 @@ public class CalculationService implements ICalculationService {
 	@Override
 	public List<Calculation> findAll() {
 		List<CalculationEntity> entityList = repository.findAll();
+		return map(entityList);
+	}
+
+	public List<Calculation> map(List<CalculationEntity> entityList) {
 		List<Calculation> calculations = entityList.stream().map(entity -> {
 			Calculation calculation = mMapper.map(entity, Calculation.class);
 			calculation.setProductName(cacheManager.getProduct(entity.getProductType()).getName());
@@ -86,19 +91,15 @@ public class CalculationService implements ICalculationService {
 			msg = CustomMessage.getMessage(CustomMessage.CALCULATION_MAN_HRS_IS_NOT_VALID,
 					new String[] { String.valueOf(toBeSaved.getCalculatedManHours()) });
 		} else {
-			boolean isExisting = false;
-			List<CalculationEntity> records = repository.findByProductTypeAndPhaseId(toBeSaved.getProductType(),
+			CalculationEntity record = repository.findByProductTypeAndPhaseId(toBeSaved.getProductType(),
 					toBeSaved.getPhaseId());
-			if (!records.isEmpty()) {
-				if (records.size() == 1) {
-					if (toBeSaved.getId() == null || !records.get(0).getId().equals(toBeSaved.getId()))
-						isExisting = true;
-				} else
-					isExisting = true; // Worst case
-			}
-			if (isExisting)
+			if (toBeSaved.getId() != null && record != null && !toBeSaved.getId().equals(record.getId()))
 				msg = CustomMessage.getMessage(CustomMessage.CALCULATION_ENTRY_ALREADY_EXIST,
 						new String[] { toBeSaved.getProductName(), toBeSaved.getPhaseName() });
+			else if (toBeSaved.getId() == null && record != null)
+				msg = CustomMessage.getMessage(CustomMessage.CALCULATION_ENTRY_ALREADY_EXIST,
+						new String[] { toBeSaved.getProductName(), toBeSaved.getPhaseName() });
+
 		}
 		if (!msg.equals("")) {
 			throw exceptionFactory.createException(ErrorCode.VALIDATION, msg, null);
@@ -106,4 +107,9 @@ public class CalculationService implements ICalculationService {
 
 	}
 
+	@Override
+	public Calculation findByProductTypeAndPhaseId(String productType, String phaseId) {
+		CalculationEntity entity = repository.findByProductTypeAndPhaseId(productType, phaseId);
+		return entity !=null ? mMapper.map(entity, Calculation.class) : null;
+	}
 }

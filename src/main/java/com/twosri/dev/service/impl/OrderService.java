@@ -36,6 +36,9 @@ public class OrderService implements IOrderService {
 
 	@Autowired
 	CacheManager cacheManager;
+	
+	@Autowired
+	EventAdviser eventAdviser;
 
 	@Override
 	public void delete(Order deleted) {
@@ -79,6 +82,7 @@ public class OrderService implements IOrderService {
 			updateDate(toBeSaved);
 			OrderEntity entity = repository.save(mMapper.map(toBeSaved, OrderEntity.class));
 			log.info("Saved in db {}",entity);
+			eventAdviser.generateEvents(toBeSaved).forEach(event->{log.info("event created as {}",event);});
 			return mMapper.map(entity, Order.class);
 		} catch (Exception e) {
 			throw exceptionFactory.createException(ErrorCode.GENERIC,

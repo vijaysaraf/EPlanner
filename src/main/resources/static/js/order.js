@@ -13,6 +13,7 @@ function initWindow() {
 }
 function populateTable() {
 	loadSelectBoxes();
+	
 	$('#table').bootstrapTable({
 		url : '/admin/orders/load',
 		columns : [ {

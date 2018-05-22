@@ -17,5 +17,5 @@ public interface CalculationRepository extends MongoRepository<CalculationEntity
 
 	CalculationEntity save(CalculationEntity saved);
 
-	List<CalculationEntity> findByProductTypeAndPhaseId(String productType, String phaseId);
+	CalculationEntity findByProductTypeAndPhaseId(String productType, String phaseId);
 }

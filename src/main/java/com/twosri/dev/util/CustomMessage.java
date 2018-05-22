@@ -64,6 +64,11 @@ public class CustomMessage {
 	public static final String ORDER_ENTRY_ADDED_SUCCESS = "Order number [0] created successfully";
 	public static final String ORDER_ENTRY_EDITED_SUCCESS = "Order number [0] updated successfully";
 	public static final String ORDER_ENTRY_DELETED_SUCCESS = "Order number [0] deleted successfully";
+	
+	//EVENT
+	public static final String EVENT_ADDED_SUCCESS = "Event number [0] created successfully";
+	public static final String EVENT_EDITED_SUCCESS = "Event number [0] updated successfully";
+	public static final String EVENT_DELETED_SUCCESS = "Event number [0] deleted successfully";
 
 	public static String getMessage(String message, final String[] param) {
 		if (param != null) {
